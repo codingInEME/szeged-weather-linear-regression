@@ -1,0 +1,1 @@
+# szeged-weather-linear-regression
