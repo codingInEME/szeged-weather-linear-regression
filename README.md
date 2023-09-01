@@ -1,5 +1,7 @@
 # szeged-weather-linear-regression
 
+Dataset Source: [Weather in Szeged 2006-2016](https://www.kaggle.com/datasets/budincsevity/szeged-weather)
+
 ## Relationship of Features with Apparent Temperature
 The substantial variability in target values prompted me to develop a model excluding Humidity and Wind Speed.
 ![individual plots between target and features](plots/target_feature_plot.png)
