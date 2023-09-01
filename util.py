@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def load_data():
     df = pd.read_csv('weatherHistory.csv')
@@ -14,14 +15,6 @@ def load_data():
     X_train = np.concatenate((temperature, humidity, windSpeed), axis=1)
     y_train = apparent_temperature.flatten()
 
-
-    # print(f'temperatue =\n {temperature}')
-    # print(f'\napparent_temperature =\n {apparent_temperature}')
-    # print(f'\nhumidity =\n {humidity}')
-    # print(f'\nwindSpeed =\n {windSpeed}')
-
-    # print(f'\ny_train =\n {y_train}')
-    # print(f'\nX_train =\n {X_train}')
     return X_train, y_train
 
 
@@ -49,9 +42,8 @@ def compute_gradient(X, y, w, b):
         residual = predict(X[i], w, b) - y[i]
         dj_db += residual
 
-        for j in range(n):
-            dj_dw[j] += residual * X[i][j]
-
+        dj_dw += residual * X[i]
+        
     dj_dw /= m
     dj_db /= m
 
@@ -70,3 +62,35 @@ def gradient_descent(X, y, w_in, b_in, alpha, num_iters):
             print(f"Iteration   {i}: Cost  {compute_cost(X, y, w_in, b_in)}")
 
     return w_in, b_in
+
+def stochastic_gradient_descent(X, y, w_in, b_in, alpha, num_iters):
+    print('new')
+    for i in range(num_iters):
+        rand = np.random.randint(X.shape[0])
+
+        residual = predict(X[rand], w_in, b_in) - y[rand]
+
+        dj_db = residual
+        dj_dw =  residual * X[rand]
+
+        w_in = w_in - (alpha * dj_dw)
+        b_in = b_in - (alpha * dj_db)
+
+        if i % (num_iters / 10) == 0:
+            print(f"Iteration   {i}: Cost  {compute_cost(X, y, w_in, b_in)}")
+
+    return w_in, b_in
+
+def target_prediction_plot(X, Y, w, b, values):
+    test_amnt = values
+
+    x_coord = np.arange(test_amnt)
+
+    # prediction of first test_amnt examples
+    f_wb = np.dot(w,np.transpose(X[:test_amnt])) + b
+
+    plt.scatter(x_coord, Y[:test_amnt], label='target')
+    plt.scatter(x_coord, f_wb, label='predict')
+    plt.xlabel('# Examples')
+    plt.legend(loc='best')
+    plt.show()
